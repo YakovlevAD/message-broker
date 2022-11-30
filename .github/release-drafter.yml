@@ -1,0 +1,25 @@
+name-template: 'v$NEXT_PATCH_VERSION'
+tag-template: 'v$NEXT_PATCH_VERSION'
+categories:
+  - title: ' New Features'
+    labels:
+      - 'type:features'
+  # â ıòó êàòåãîğèş ñîáèğàåì âñå PR ñ ìåòêîé type:features
+
+  - title: ' Bugs Fixes'
+    labels:
+      - 'type:fix'
+  # àíàëîãè÷íî äëÿ ìåòêè type:fix è ò.ä.
+
+  - title: ' Documentation'
+    labels:
+      - 'type:documentation'
+
+  - title: ' Configuration'
+    labels:
+      - 'type:config'
+
+change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
+template: |
+  ## Changes
+  $CHANGES
