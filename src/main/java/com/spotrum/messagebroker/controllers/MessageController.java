@@ -1,9 +1,6 @@
 package com.spotrum.messagebroker.controllers;
 
-import com.spotrum.messagebroker.Entities.CChat;
-import com.spotrum.messagebroker.Entities.CEvent;
-import com.spotrum.messagebroker.Entities.EventDTO;
-import com.spotrum.messagebroker.Entities.MessageDTO;
+import com.spotrum.messagebroker.Entities.*;
 import com.spotrum.messagebroker.services.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +70,11 @@ public class MessageController {
     public void postNewChat(@RequestBody CChat chat) {
         log.debug(String.format("REST RQ <<< /postNewChat chat:%s", chat));
         messageService.postNewChat(chat);
+    }
+
+    @PostMapping("log")
+    public void postLog(@RequestBody CLog logg) {
+        log.debug(String.format("APPLOGG time:%s userId:%s payload:%s",logg.getTime(), logg.getUserId(), logg.payload));
     }
 }
 
