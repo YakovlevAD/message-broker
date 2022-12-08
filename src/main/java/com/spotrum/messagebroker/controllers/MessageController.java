@@ -18,6 +18,11 @@ public class MessageController {
     @Autowired
     MessageService messageService;
 
+    @GetMapping("/")
+    public String getMainPage(){
+        return "Hello";
+    }
+
     @MessageMapping("/chat/{to}")
     public void sendMessagePersonal(@DestinationVariable String to, MessageDTO message) {
         log.debug(String.format("WS RQ <<< /chat/%s msg:%s", to, message));
