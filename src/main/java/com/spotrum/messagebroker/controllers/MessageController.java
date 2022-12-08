@@ -47,7 +47,7 @@ public class MessageController {
         log.debug(String.format("LOGAPP [%s] %s", from, appLog));
     }
 
-    @GetMapping("getAllEvents")
+    @GetMapping("/getAllEvents")
     public List<CEvent> getAllEvents(){
         log.debug(String.format("REST RQ <<< /getAllEvents"));
         return messageService.getAllEventsV1();
@@ -59,25 +59,25 @@ public class MessageController {
         return messageService.getAllEventsV1();
     }
 
-    @GetMapping("getMessagesById")
+    @GetMapping("/getMessagesById")
     public List getMessagesById(@RequestParam("id")String id) {
         log.debug(String.format("REST RQ <<< /getMessagesById id=%s", id));
         return messageService.getMessagesById(id);
     }
 
-    @GetMapping("getChatBySubscriberId")
+    @GetMapping("/getChatBySubscriberId")
     public List getChatBySubscriberId(@RequestParam("id")String id) {
         log.debug(String.format("REST RQ <<< /getChatBySubscriberId id=%s", id));
         return messageService.getChatBySubscriberId(id);
     }
 
-    @PostMapping("postNewChat")
+    @PostMapping("/postNewChat")
     public void postNewChat(@RequestBody CChat chat) {
         log.debug(String.format("REST RQ <<< /postNewChat chat:%s", chat));
         messageService.postNewChat(chat);
     }
 
-    @PostMapping("log")
+    @PostMapping("/log")
     public void postLog(@RequestBody CLog logg) {
         log.debug(String.format("APPLOGG time:%s userId:%s payload:%s",logg.getTime(), logg.getUserId(), logg.payload));
     }
