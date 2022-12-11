@@ -71,6 +71,12 @@ public class MessageController {
         return messageService.getChatBySubscriberId(id);
     }
 
+    @GetMapping("/getChatByChatId")
+    public CChat getChatByChatId(@RequestParam("id")String id) {
+        log.debug(String.format("REST RQ <<< /getChatByChatId id=%s", id));
+        return messageService.getChatByChatId(id);
+    }
+
     @PostMapping("/postNewChat")
     public void postNewChat(@RequestBody CChat chat) {
         log.debug(String.format("REST RQ <<< /postNewChat chat:%s", chat));

@@ -93,6 +93,22 @@ public class MessageService {
         return nList;
     }
 
+    public CChat getChatByChatId(String id) {
+        var resultSet = jdbcTemplate.queryForList("select * from chats where id_chat = " + id);
+        var supChat = new CChat();
+        supChat.chatId = "1";
+        return resultSet.stream()
+                .map( el -> {
+                    var dto = new CChat();
+                    dto.chatId = el.get("id_chat").toString();
+                    dto.subscribers = el.get("subscribers").toString()
+                            .replace("[", "")
+                            .replace("]", "")
+                            .split(", ");
+                            return dto;
+                }).findFirst().orElse(new CChat());
+    }
+
     public void postNewChat(CChat chat) {
         jdbcTemplate.update("insert into chats (id_chat,subscribers) " +
                 "values (?,?)", chat.chatId, Arrays.toString(chat.subscribers));
