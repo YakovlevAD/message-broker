@@ -94,7 +94,7 @@ public class MessageService {
     }
 
     public CChat getChatByChatId(String id) {
-        var resultSet = jdbcTemplate.queryForList("select * from chats where id_chat = " + id);
+        var resultSet = jdbcTemplate.queryForList("select * from chats where id_chat like '" + id + "'");
         var supChat = new CChat();
         supChat.chatId = "1";
         return resultSet.stream()
