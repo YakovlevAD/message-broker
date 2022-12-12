@@ -18,10 +18,9 @@ import java.util.stream.Collectors;
 public class MessageService {
 
     @Autowired
-    private SimpMessagingTemplate simpMessagingTemplate;
-
-    @Autowired
     JdbcTemplate jdbcTemplate;
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     public void sendMessage(String to, MessageDTO message) {
         jdbcTemplate.update("insert into messages (message_text,message_from,message_to,created_datetime) " +
@@ -98,14 +97,14 @@ public class MessageService {
         var supChat = new CChat();
         supChat.chatId = "1";
         return resultSet.stream()
-                .map( el -> {
+                .map(el -> {
                     var dto = new CChat();
                     dto.chatId = el.get("id_chat").toString();
                     dto.subscribers = el.get("subscribers").toString()
                             .replace("[", "")
                             .replace("]", "")
                             .split(", ");
-                            return dto;
+                    return dto;
                 }).findFirst().orElse(new CChat());
     }
 
