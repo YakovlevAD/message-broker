@@ -57,6 +57,22 @@
 					</excludes>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.flywaydb</groupId>
+				<artifactId>flyway-maven-plugin</artifactId>
+				<version>5.2.1</version>
+				<configuration>
+					<url>jdbc:mysql://localhost:3306/getdoc_db?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=UTC</url>
+					<!--										<url>jdbc:mysql://35.222.247.12:3306/getdoc_db?allowPublicKeyRetrieval=true&amp;useSSL=false&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=UTC</url>-->
+					<!--					<user>pips</user>-->
+					<!--					<password>A22l3e4x!</password>-->
+					<user>root</user>
+					<password>a22l3e4x</password>
+					<schemas>
+						<schema>getdoc_db</schema>
+					</schemas>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<repositories>
