@@ -4,6 +4,7 @@ import com.spotrum.messagebroker.Entities.*;
 import com.spotrum.messagebroker.services.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.*;
@@ -18,28 +19,26 @@ public class MessageController {
     @Autowired
     MessageService messageService;
 
-    @GetMapping("/")
-    public String getMainPage(){
-        return "Hello";
-    }
+
+    ////// WebSocket
 
     @MessageMapping("/chat/{to}")
-    public void sendMessagePersonal(@DestinationVariable String to, MessageDTO message) {
+    public void sendMessagePersonal(@DestinationVariable String to, CMessage message) {
         log.debug(String.format("WS RQ <<< /chat/%s msg:%s", to, message));
         messageService.sendMessage(to, message);
 
     }
 
-    @MessageMapping("/events/{to}")
-    public void sendEvent(@DestinationVariable String to, EventDTO eventDTO){
-        log.debug(String.format("WS RQ <<< /events/%s %s", to, eventDTO));
-        messageService.sendEvent(to, eventDTO);
-    }
+//    @MessageMapping("/events/{to}")
+//    public void sendEvent(@DestinationVariable String to, EventDTO eventDTO){
+//        log.debug(String.format("WS RQ <<< /events/%s %s", to, eventDTO));
+//        messageService.sendEvent(to, eventDTO);
+//    }
 
-    @MessageMapping("/prevEvents/{to}")
+    @MessageMapping("/sendNewEvent/{to}")
     public void sendEvent(@DestinationVariable String to, CEvent cEvent){
-        log.debug(String.format("WS RQ <<< /prevEvents/%s event:%s",to, cEvent));
-        messageService.sendEvent(cEvent);
+        log.debug(String.format("WS RQ <<< /sendNewEvent/%s event:%s",to, cEvent));
+        messageService.sendNewEvent(cEvent);
     }
 
     @MessageMapping("/log/{from}")
@@ -47,22 +46,34 @@ public class MessageController {
         log.debug(String.format("LOGAPP [%s] %s", from, appLog));
     }
 
+    /////// REST
+
+    @GetMapping("/")
+    public String getMainPage(){
+        messageService.createDemoData();
+        return "Hello";
+    }
+    @GetMapping("/s")
+    public ResponseEntity getSecondPage(){
+        return ResponseEntity.ok(messageService.getDemoData());
+    }
+
     @GetMapping("/getAllEvents")
     public List<CEvent> getAllEvents(){
         log.debug(String.format("REST RQ <<< /getAllEvents"));
-        return messageService.getAllEventsV1();
+        return messageService.getAllEvents();
     }
 
-    @GetMapping("/v1/getAllEvents")
-    public List<CEvent> getAllEventsV1(){
-        log.debug(String.format("REST RQ <<< /v1/getAllEvents"));
-        return messageService.getAllEventsV1();
+    @GetMapping("/getAllChats")
+    public List<CChat> getAllChats(){
+        log.debug(String.format("REST RQ <<< /getAllChats"));
+        return messageService.getAllChats();
     }
 
-    @GetMapping("/getMessagesById")
-    public List getMessagesById(@RequestParam("id")String id) {
-        log.debug(String.format("REST RQ <<< /getMessagesById id=%s", id));
-        return messageService.getMessagesById(id);
+    @GetMapping("/getAllMessagesByChatId/{id}")
+    public List getMessagesById(@PathVariable("id")Long id) {
+        log.debug(String.format("REST RQ <<< /getAllMessagesByChatId/%s", id));
+        return messageService.getAllMessagesByChatId(id);
     }
 
     @GetMapping("/getChatBySubscriberId")
@@ -72,15 +83,23 @@ public class MessageController {
     }
 
     @GetMapping("/getChatByChatId")
-    public CChat getChatByChatId(@RequestParam("id")String id) {
+    public CChat getChatByChatId(@RequestParam("id")Long id) {
         log.debug(String.format("REST RQ <<< /getChatByChatId id=%s", id));
         return messageService.getChatByChatId(id);
     }
 
+    @GetMapping("/getSubscribeToChatByChatId")
+    public CChat getSubscribeToChatByChatId(@RequestParam("userId")String userId, @RequestParam("chatId")Long chatId) {
+        log.debug(String.format("REST RQ <<< getSubscribeToChatByChatId userId:%s chatId:%s",userId,chatId));
+        return messageService.getSubscribeToChatByChatId(userId, chatId);
+    }
+
     @PostMapping("/postNewChat")
-    public void postNewChat(@RequestBody CChat chat) {
+    public CChat postNewChat(@RequestBody CChat chat) {
         log.debug(String.format("REST RQ <<< /postNewChat chat:%s", chat));
-        messageService.postNewChat(chat);
+        var dto = messageService.postNewChat(chat);
+        log.debug(String.format("CHAT: %s", dto));
+        return dto;
     }
 
     @PostMapping("/log")

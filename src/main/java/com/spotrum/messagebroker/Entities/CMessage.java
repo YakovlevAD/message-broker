@@ -1,20 +1,28 @@
 package com.spotrum.messagebroker.Entities;
 
-public class CMessage {
-    public String id;
-    public String messageText;
-    public String messageFrom;
-    public String messageTo;
-    public String createdDatetime;
+import lombok.Data;
 
-    @Override
-    public String toString() {
-        return "CMessage{" +
-                "id='" + id + '\'' +
-                ", messageText='" + messageText + '\'' +
-                ", messageFrom='" + messageFrom + '\'' +
-                ", messageTo='" + messageTo + '\'' +
-                ", createdDatetime='" + createdDatetime + '\'' +
-                '}';
-    }
+import javax.persistence.*;
+
+@Entity
+@Data
+@Table(name = "c_messages")
+public class CMessage {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
+    @Column(name = "message_text")
+    public String messageText;
+
+    @Column(name = "sender_id")
+    public String senderId;
+
+    @Column(name = "chat_id")
+    public Long chatId;
+
+    @Column(name = "created_datetime")
+    public String createdDatetime;
 }
