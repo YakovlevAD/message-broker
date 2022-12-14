@@ -82,6 +82,12 @@ public class MessageController {
         return messageService.getChatBySubscriberId(id);
     }
 
+    @GetMapping("/getIndividualChatWithById")
+    public CChat getIndividualChatWithById(@RequestParam("id")String id) {
+        log.debug(String.format("REST RQ <<< /getIndividualChatWithById id=%s", id));
+        return messageService.getIndividualChatWithById(id);
+    }
+
     @GetMapping("/getChatByChatId")
     public CChat getChatByChatId(@RequestParam("id")Long id) {
         log.debug(String.format("REST RQ <<< /getChatByChatId id=%s", id));

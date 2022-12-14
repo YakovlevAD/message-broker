@@ -190,4 +190,13 @@ public class MessageService {
         cEvent.longitude = "2342234";
         cEventReposirory.save(cEvent);
     }
+
+    public CChat getIndividualChatWithById(String id) {
+        var chat = cChatsRepository.findCChatById_subscriber(id).orElse(new CChat());
+        if (chat.getId() == null) {
+            chat.addSub(id);
+            chat = cChatsRepository.save(chat);
+        }
+        return chat;
+    }
 }
