@@ -47,16 +47,16 @@ public class MessageController {
     }
 
     /////// REST
-
+    //TODO: - вставить id app
     @GetMapping("/")
     public String getMainPage(){
         messageService.createDemoData();
-        return "Hello";
+        return "<a href=\"https://itunes.apple.com/ru/app/id6444730876\">Download Spotrum app</a>";
     }
-    @GetMapping("/s")
-    public ResponseEntity getSecondPage(){
-        return ResponseEntity.ok(messageService.getDemoData());
-    }
+//    @GetMapping("/s")
+//    public ResponseEntity getSecondPage(){
+//        return ResponseEntity.ok(messageService.getDemoData());
+//    }
 
     @GetMapping("/getAllEvents")
     public List<CEvent> getAllEvents(){
@@ -82,16 +82,16 @@ public class MessageController {
         return messageService.getChatBySubscriberId(id);
     }
 
-    @GetMapping("/getIndividualChatWithById")
-    public CChat getIndividualChatWithById(@RequestParam("id")String id) {
-        log.debug(String.format("REST RQ <<< /getIndividualChatWithById id=%s", id));
-        return messageService.getIndividualChatWithById(id);
-    }
-
     @GetMapping("/getChatByChatId")
     public CChat getChatByChatId(@RequestParam("id")Long id) {
         log.debug(String.format("REST RQ <<< /getChatByChatId id=%s", id));
         return messageService.getChatByChatId(id);
+    }
+
+    @GetMapping("/getIndividualChatBetwen")
+    public CChat getIndividualChatBetwen(@RequestParam("curid")String curid, @RequestParam("secud")String secuid) {
+        log.debug(String.format("REST  RQ <<< /getIndividualChatBetwen curid=%s secuid=%s",  curid, secuid));
+        return messageService.getIndividualChatBetwen(curid, secuid);
     }
 
     @GetMapping("/getSubscribeToChatByChatId")

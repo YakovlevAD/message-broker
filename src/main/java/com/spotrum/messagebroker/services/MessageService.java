@@ -191,12 +191,7 @@ public class MessageService {
         cEventReposirory.save(cEvent);
     }
 
-    public CChat getIndividualChatWithById(String id) {
-        var chat = cChatsRepository.findCChatById_subscriber(id).orElse(new CChat());
-        if (chat.getId() == null) {
-            chat.addSub(id);
-            chat = cChatsRepository.save(chat);
-        }
-        return chat;
+    public CChat getIndividualChatBetwen(String curid, String secuid) {
+        return ((List<CChat>)cChatsRepository.findAll()).stream().findFirst().orElseThrow();
     }
 }

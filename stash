@@ -1,0 +1,23 @@
+//if (UIApplication.shared.canOpenURL(URL(string:"comgooglemaps://")!)) {
+//
+//    // открываем googlemaps
+//    UIApplication.shared.openURL(URL(string: "comgooglemaps://?center=40.765819,-73.975866&zoom=14&views=traffic")!)
+//} else if (UIApplication.shared.canOpenURL(URL(string:"yandexmaps://")!)) {
+//    // открываем yandexmaps
+//    UIApplication.shared.openURL(URL(string: "yandexmaps://maps.yandex.ru/?ll=37.62,55.75&z=12")!)
+//} else {
+//    // откриваем нативное приложение или проверяем дальше
+//}
+
+
+
+//protocol EventsViewControllevReloadDelegate: class {
+//    func reladpins()
+//}
+//extension EventsViewController: EventsViewControllevReloadDelegate {
+//    func reladpins() {
+//        DispatchQueue.main.async {
+//
+//        }
+//    }
+//}
