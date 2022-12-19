@@ -172,7 +172,7 @@ public class MessageService {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z");
         ZonedDateTime zonedDateTime = ZonedDateTime.parse(startTime, formatter);
         log.debug(String.format("RETURN DATETIME: %s",zonedDateTime.minusSeconds(1000)));
-        return !zonedDateTime.minusSeconds(1000).isAfter(ZonedDateTime.now()) && !ev.title.isEmpty() && !ev.description.isEmpty();
+        return zonedDateTime.isAfter(ZonedDateTime.now()) && !ev.title.isEmpty() && !ev.description.isEmpty();
     }
 
 //    public void postNewEvent(PreviewEventDTO pEventDTO) {
