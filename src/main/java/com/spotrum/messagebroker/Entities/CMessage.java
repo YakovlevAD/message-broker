@@ -23,6 +23,13 @@ public class CMessage {
     @Column(name = "chat_id")
     public Long chatId;
 
+    @Column(name = "sender_name")
+    public String senderName;
+
+    @Column(name = "status")
+    public Integer  status;
+
     @Column(name = "created_datetime")
     public String createdDatetime;
+
 }

@@ -4,7 +4,8 @@ DROP TABLE IF EXISTS c_chats;
 
 CREATE TABLE c_chats (
                          id  INT(11) PRIMARY KEY AUTO_INCREMENT,
-                         description VARCHAR(255)
+                         description VARCHAR(255),
+                         type INT(2)
 )AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;
 
 DROP TABLE IF EXISTS c_subscribers;
@@ -24,6 +25,8 @@ CREATE TABLE c_messages (
                             sender_id  VARCHAR(255) NOT NULL,
                             chat_id  INT(11) NOT NULL,
                             created_datetime VARCHAR(255) NOT NULL,
+                            sender_name VARCHAR (255) NOT NULL,
+                            status INT(11) NOT NULL,
                             CONSTRAINT FK_CHAT_ID FOREIGN KEY (chat_id)
                                 REFERENCES c_chats (id),
                             PRIMARY KEY (id)

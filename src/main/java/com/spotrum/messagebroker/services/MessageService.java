@@ -13,7 +13,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -35,6 +38,8 @@ public class MessageService {
         msg.setSenderId(message.getSenderId());
         msg.setCreatedDatetime(message.getCreatedDatetime());
         msg.setMessageText(message.getMessageText());
+        msg.setStatus(message.getStatus());
+        msg.setSenderName(message.getSenderName());
         var resultMsg = cMessageRepository.save(msg);
 
         var chatId = resultMsg.getChatId();
@@ -67,7 +72,7 @@ public class MessageService {
     }
 
     public List getChatBySubscriberId(String id) {
-        return ((List<CChat>)cChatsRepository.findAll()).stream().filter( e -> e.getId_subscriber().contains(id))
+        return ((List<CChat>) cChatsRepository.findAll()).stream().filter(e -> e.getId_subscriber().contains(id))
                 .collect(Collectors.toList());
     }
 
@@ -75,7 +80,7 @@ public class MessageService {
         return cChatsRepository.findById(id).orElseThrow();
     }
 
-    public CChat getSubscribeToChatByChatId(String userId, Long chatId){
+    public CChat getSubscribeToChatByChatId(String userId, Long chatId) {
         var chat = cChatsRepository.findById(chatId).orElseThrow();
         chat.addSub(userId);
         cChatsRepository.save(chat);
@@ -86,6 +91,7 @@ public class MessageService {
         log.debug(String.format("RQ << /postNewChat"));
         var newChat = new CChat();
         chat.getId_subscriber().forEach(newChat::addSub);
+        newChat.setType(1);
         newChat.setDescription(chat.description);
         return cChatsRepository.save(newChat);
     }
@@ -98,25 +104,28 @@ public class MessageService {
 //    }
 
     public void sendNewEvent(CEvent cEvent) {
-        var newEvent = new CEvent();
-        newEvent.setOwnerId(cEvent.ownerId);
-        newEvent.setTitle(cEvent.title);
-        newEvent.setDescription(cEvent.description);
-        newEvent.setDuration(cEvent.duration);
-        newEvent.setStartTime(cEvent.startTime);
-//        newEvent.setChatId(cEvent.chatId);
-        newEvent.setLatitude(cEvent.latitude);
-        newEvent.setLongitude(cEvent.longitude);
 
-        var newChat = new CChat();
-        newChat.setDescription("New Chat");
-        newChat  = cChatsRepository.save(newChat);
-        System.out.println("############"+newChat.getId());
-        newEvent.setChatId(newChat.getId());
-        System.out.println("############"+newEvent.getChatId());
-        newEvent = cEventReposirory.save(newEvent);
-        log.debug(String.format("WS RS >>> /topic/allEvents/1 prevEvent:%s", newEvent));
-        simpMessagingTemplate.convertAndSend("/topic/allEvents/1", newEvent);
+            var newEvent = new CEvent();
+            newEvent.setOwnerId(cEvent.ownerId);
+            newEvent.setTitle(cEvent.title);
+            newEvent.setDescription(cEvent.description);
+            newEvent.setDuration(cEvent.duration);
+            newEvent.setStartTime(cEvent.startTime);
+
+            newEvent.setLatitude(cEvent.latitude);
+            newEvent.setLongitude(cEvent.longitude);
+
+            var newChat = new CChat();
+            newChat.setDescription("New Chat");
+            newChat.setType(1);
+            newChat = cChatsRepository.save(newChat);
+            System.out.println("############" + newChat.getId());
+            newEvent.setChatId(newChat.getId());
+            System.out.println("############" + newEvent.getChatId());
+            newEvent = cEventReposirory.save(newEvent);
+            log.debug(String.format("WS RS >>> /topic/allEvents/1 prevEvent:%s", newEvent));
+            simpMessagingTemplate.convertAndSend("/topic/allEvents/1", newEvent);
+
     }
 
 //    public void sendEventV1(CEvent CEvent) {
@@ -147,7 +156,23 @@ public class MessageService {
 //    }
 
     public List<CEvent> getAllEvents() {
-        return (List<CEvent>)cEventReposirory.findAll();
+        List<CEvent> list = (List<CEvent>) cEventReposirory.findAll();
+        list.stream().forEach(el->{
+            log.debug(String.format("########:%s",checkEvents(el)));
+        });
+        return list.stream().filter(this::checkEvents).collect(Collectors.toList());
+    }
+
+    public boolean checkEvents(CEvent ev) {
+//        return true;
+        var startTime = ev.getStartTime();
+        System.out.println("######>>>"+startTime);
+//        var dur = Float.parseFloat(ev.getDuration());
+        log.debug(String.format("GET DATETIME STRING: %s", startTime));
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z");
+        ZonedDateTime zonedDateTime = ZonedDateTime.parse(startTime, formatter);
+        log.debug(String.format("RETURN DATETIME: %s",zonedDateTime.minusSeconds(1000)));
+        return !zonedDateTime.minusSeconds(1000).isAfter(ZonedDateTime.now()) && !ev.title.isEmpty() && !ev.description.isEmpty();
     }
 
 //    public void postNewEvent(PreviewEventDTO pEventDTO) {
@@ -162,8 +187,7 @@ public class MessageService {
     }
 
     public String getDemoData() {
-        return
-                "Data: msg:s% chat:s% evnt:s%"+cMessageRepository.findAll()+cChatsRepository.findAll()+cEventReposirory.findAll();
+        return "Data: msg:s% chat:s% evnt:s%" + cMessageRepository.findAll() + cChatsRepository.findAll() + cEventReposirory.findAll();
     }
 
     public void createDemoData() {
@@ -184,14 +208,30 @@ public class MessageService {
         cEvent.title = "deed";
         cEvent.description = "dede";
         cEvent.duration = "dede";
-        cEvent.startTime  = "dede";
+        cEvent.startTime = "dede";
         cEvent.chatId = 1l;
         cEvent.latitude = "2323";
         cEvent.longitude = "2342234";
         cEventReposirory.save(cEvent);
     }
 
-    public CChat getIndividualChatBetwen(String curid, String secuid) {
-        return ((List<CChat>)cChatsRepository.findAll()).stream().findFirst().orElseThrow();
+    public CChat getIndividualChatBetween(String cuId, String suId) {
+        return ((List<CChat>) cChatsRepository.findAll()).stream().filter(ev -> ev.getId_subscriber().contains(cuId) && ev.getId_subscriber().contains(suId) && ev.getType() == 0).findFirst().orElse(this.createNewChat(cuId, suId));
+    }
+
+    CChat createNewChat(String curid, String secuid) {
+        var chatn = new CChat();
+        chatn.setType(0);
+        var set = new HashSet<String>();
+        set.add(curid);
+        set.add(secuid);
+        chatn.setDescription("New inChat");
+        chatn.setId_subscriber(set);
+        var nchat = cChatsRepository.save(chatn);
+        log.debug("######NEW N CHAT:" + nchat.getId() + " " + nchat.getId_subscriber().size());
+        return nchat;
     }
 }
+
+// 0 - individual
+// 1 - group

@@ -9,7 +9,13 @@ import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Period;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAmount;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -88,10 +94,10 @@ public class MessageController {
         return messageService.getChatByChatId(id);
     }
 
-    @GetMapping("/getIndividualChatBetwen")
-    public CChat getIndividualChatBetwen(@RequestParam("curid")String curid, @RequestParam("secud")String secuid) {
-        log.debug(String.format("REST  RQ <<< /getIndividualChatBetwen curid=%s secuid=%s",  curid, secuid));
-        return messageService.getIndividualChatBetwen(curid, secuid);
+    @GetMapping("/getIndividualChatBetween")
+    public CChat getIndividualChatBetwen(@RequestParam("cuId")String cuId, @RequestParam("suId")String suId) {
+        log.debug(String.format("REST  RQ <<< /getIndividualChatBetween cuId=%s suId=%s",  cuId, suId));
+        return messageService.getIndividualChatBetween(cuId, suId);
     }
 
     @GetMapping("/getSubscribeToChatByChatId")

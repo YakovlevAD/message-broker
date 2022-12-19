@@ -24,6 +24,9 @@ public class CChat {
     @Column(name = "description")
     public String description;
 
+    @Column(name = "type")
+    public Integer type;
+
     @ElementCollection
     @CollectionTable(name="c_subscribers",
             joinColumns = @JoinColumn(name="chat_id"))
