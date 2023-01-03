@@ -116,7 +116,7 @@ public class MessageService {
             newEvent.setLongitude(cEvent.longitude);
 
             var newChat = new CChat();
-            newChat.setDescription("New Chat");
+            newChat.setDescription(cEvent.title);
             newChat.setType(1);
             newChat = cChatsRepository.save(newChat);
             System.out.println("############" + newChat.getId());
@@ -164,15 +164,15 @@ public class MessageService {
     }
 
     public boolean checkEvents(CEvent ev) {
-//        return true;
-        var startTime = ev.getStartTime();
-        System.out.println("######>>>"+startTime);
-//        var dur = Float.parseFloat(ev.getDuration());
-        log.debug(String.format("GET DATETIME STRING: %s", startTime));
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z");
-        ZonedDateTime zonedDateTime = ZonedDateTime.parse(startTime, formatter);
-        log.debug(String.format("RETURN DATETIME: %s",zonedDateTime.minusSeconds(1000)));
-        return zonedDateTime.isAfter(ZonedDateTime.now()) && !ev.title.isEmpty() && !ev.description.isEmpty();
+        return true;
+//        var startTime = ev.getStartTime();
+//        System.out.println("#####>>>"+startTime);
+////        var dur = Float.parseFloat(ev.getDuration());
+//        log.debug(String.format("GET DATETIME STRING: %s", startTime));
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z");
+//        ZonedDateTime zonedDateTime = ZonedDateTime.parse(startTime, formatter);
+//        log.debug(String.format("RETURN DATETIME: %s",zonedDateTime.minusSeconds(1000)));
+//        return zonedDateTime.isAfter(ZonedDateTime.now()) && !ev.title.isEmpty() && !ev.description.isEmpty();
     }
 
 //    public void postNewEvent(PreviewEventDTO pEventDTO) {

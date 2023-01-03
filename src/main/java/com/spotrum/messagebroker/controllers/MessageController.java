@@ -118,5 +118,13 @@ public class MessageController {
     public void postLog(@RequestBody CLog logg) {
         log.debug(String.format("APPLOGG time:%s userId:%s payload:%s",logg.getTime(), logg.getUserId(), logg.payload));
     }
+
+    private Double balance = 1000.00;
+    @GetMapping("/getBalance")
+    public CBalance getBalance(@RequestParam("id")String id) {
+        System.out.println(">>>>>>>balance");
+        balance += balance;
+        return new CBalance("$", String.valueOf(balance));
+    }
 }
 
