@@ -1,13 +1,12 @@
 package com.spotrum.messagebroker.controllers;
 
-import com.spotrum.messagebroker.Entities.CBalance;
-import com.spotrum.messagebroker.Entities.CChat;
-import com.spotrum.messagebroker.Entities.CEvent;
-import com.spotrum.messagebroker.Entities.CLog;
+import com.spotrum.messagebroker.Entities.*;
 import com.spotrum.messagebroker.services.MessageService;
 import com.spotrum.messagebroker.services.NotificationService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -62,6 +61,16 @@ public class RESTController {
         return messageService.getChatByChatId(id);
     }
 
+    @GetMapping("/getUserById")
+    public ResponseEntity getUserById(@RequestParam("id")String id) {
+        log.debug(String.format("REST RQ <<< .getUserById id=%s", id));
+        try {
+            return ResponseEntity.ok(messageService.getUserById(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().headers(HttpHeaders.EMPTY).build();
+        }
+    }
+
     @GetMapping("/getIndividualChatBetween")
     public CChat getIndividualChatBetwen(@RequestParam("cuId")String cuId, @RequestParam("suId")String suId) {
         log.debug(String.format("REST  RQ <<< /getIndividualChatBetween cuId=%s suId=%s",  cuId, suId));
@@ -85,6 +94,12 @@ public class RESTController {
     @PostMapping("/log")
     public void postLog(@RequestBody CLog logg) {
         log.debug(String.format("APPLOGG time:%s userId:%s payload:%s",logg.getTime(), logg.getUserId(), logg.payload));
+    }
+
+    @PostMapping("/postNewUser")
+    public CUser postNewUser(@RequestBody CUser user) {
+        System.out.println(">>>>>>>"+user);
+        return messageService.postNewUser(user);
     }
 
     private Double balance = 1000.00;

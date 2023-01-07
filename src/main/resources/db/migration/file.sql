@@ -1,5 +1,18 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
+
+DROP TABLE IF EXISTS c_users;
+
+CREATE TABLE c_users (
+                         id  INT(11) PRIMARY KEY AUTO_INCREMENT,
+                         uid VARCHAR(255),
+                         token VARCHAR(255),
+                         username VARCHAR(255),
+                         email VARCHAR(255),
+                         description VARCHAR(255),
+                         status INT(2)
+)AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;
+
 DROP TABLE IF EXISTS c_chats;
 
 CREATE TABLE c_chats (

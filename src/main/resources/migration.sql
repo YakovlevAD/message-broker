@@ -165,7 +165,9 @@ INSERT INTO `messages` (`id`, `message_text`, `message_from`, `message_to`, `cre
 
 CREATE TABLE `users` (
   `id` int(11) NOT NULL,
-  `name` varchar(255) DEFAULT NULL
+  `name` varchar(255) DEFAULT NULL,
+  `status` varchar(255) DEFAULT NULL,
+  `token` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --

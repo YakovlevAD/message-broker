@@ -4,6 +4,7 @@ import com.spotrum.messagebroker.Entities.*;
 import com.spotrum.messagebroker.repositories.CChatsRepository;
 import com.spotrum.messagebroker.repositories.CEventReposirory;
 import com.spotrum.messagebroker.repositories.CMessageRepository;
+import com.spotrum.messagebroker.repositories.CUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,8 @@ public class MessageService {
     CChatsRepository cChatsRepository;
     @Autowired
     CMessageRepository cMessageRepository;
+    @Autowired
+    CUserRepository cUserRepository;
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
@@ -94,6 +97,11 @@ public class MessageService {
         newChat.setType(1);
         newChat.setDescription(chat.description);
         return cChatsRepository.save(newChat);
+    }
+
+    public CUser postNewUser(CUser user) {
+        log.debug(String.format("RQ << /postNewUser"));
+        return cUserRepository.save(user);
     }
 
 //    public void sendEvent(String to, EventDTO eventDTO) {
@@ -230,6 +238,10 @@ public class MessageService {
         var nchat = cChatsRepository.save(chatn);
         log.debug("######NEW N CHAT:" + nchat.getId() + " " + nchat.getId_subscriber().size());
         return nchat;
+    }
+
+    public CUser getUserById(String id) {
+        return cUserRepository.findByUid(id).orElseThrow();
     }
 }
 

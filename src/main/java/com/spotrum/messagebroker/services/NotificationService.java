@@ -48,13 +48,13 @@ public class NotificationService {
                 .setAlertBody(b);
 
         final String payload = payloadBuilder.build();
-        final String token = TokenUtil.sanitizeTokenString("f091b880175a16a4ed7e67e0aa1b5e7f4fbbd4da86ad19e9328b207563f27c67");
+        final String token = TokenUtil.sanitizeTokenString("5e0ed04823f0eb6b7d5a8c472ff6dd422f081449a1cfe299dee47e64748bb95c");
 
-        pushNotification = new SimpleApnsPushNotification(token, "com.spotrum.TestApp", payload);
+        pushNotification = new SimpleApnsPushNotification(token, "com.spotrum.Spotrum", payload);
         try {
             final ApnsClient apnsClient = new ApnsClientBuilder()
                     .setApnsServer(ApnsClientBuilder.DEVELOPMENT_APNS_HOST)
-                    .setClientCredentials(new File("testappcer.p12"), "CBRY875bv45zb2012!")
+                    .setClientCredentials(new File("spotrumCert.p12"), "CBRY875bv45zb2012!")
                     .build();
 
             final PushNotificationFuture<SimpleApnsPushNotification, PushNotificationResponse<SimpleApnsPushNotification>>
