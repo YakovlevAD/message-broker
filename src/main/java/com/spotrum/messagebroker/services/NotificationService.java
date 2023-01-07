@@ -39,16 +39,17 @@ public class NotificationService {
 //        System.out.println(">>>>>Push sended "+note.toString());
 //    }
 
-    public void pushTestMessage(String t, String b){
+    public void pushTestMessage(){
         final SimpleApnsPushNotification pushNotification;
 
         final ApnsPayloadBuilder payloadBuilder = new SimpleApnsPayloadBuilder();
         payloadBuilder
-                .setAlertTitle(t)
-                .setAlertBody(b);
+                .setBadgeNumber(1)
+                .setAlertTitle("title")
+                .setAlertBody("body");
 
         final String payload = payloadBuilder.build();
-        final String token = TokenUtil.sanitizeTokenString("5e0ed04823f0eb6b7d5a8c472ff6dd422f081449a1cfe299dee47e64748bb95c");
+        final String token = TokenUtil.sanitizeTokenString("80c347492a99015dfd920c2a379b0418b8b92e7f364f4d43b1455d7e685dc7d1a657140f324e00a74f5cfeedb227b79086340c9167a45e23db77513ba0edc791c5e02435f0cf4967c2a04f5c4464dd78");
 
         pushNotification = new SimpleApnsPushNotification(token, "com.spotrum.Spotrum", payload);
         try {
