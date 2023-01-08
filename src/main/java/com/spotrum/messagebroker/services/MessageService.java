@@ -149,10 +149,11 @@ public class MessageService {
     public void sendEventPushs(CEvent cEvent) {
         var owner = cUserRepository.findByUid(cEvent.ownerId).orElseThrow();
         var destination = 3.5 * Math.random();
-        String body =  String.format("%s add event %fkm", owner.description, destination);
+        String title = String.format("%s add event",owner.description);
+        String body =  String.format("%s from %fkm", cEvent.title, destination);
         cUserRepository.findAll().forEach( user -> {
             if(!cEvent.getOwnerId().equals(user.uid)) {
-                notificationService.pushMessage(user.token, cEvent.title, body);
+                notificationService.pushMessage(user.token, title, body);
             }
         });
     }
