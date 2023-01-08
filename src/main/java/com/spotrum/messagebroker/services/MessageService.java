@@ -7,17 +7,13 @@ import com.spotrum.messagebroker.repositories.CMessageRepository;
 import com.spotrum.messagebroker.repositories.CUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -32,6 +28,8 @@ public class MessageService {
     CMessageRepository cMessageRepository;
     @Autowired
     CUserRepository cUserRepository;
+    @Autowired
+    NotificationService notificationService;
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
@@ -50,6 +48,17 @@ public class MessageService {
         chat.getId_subscriber().forEach(subid -> {
             log.debug(String.format("WS RS >>> /topic/messages/%s msg:%s", subid, message));
             simpMessagingTemplate.convertAndSend("/topic/messages/" + subid, message);
+        });
+        sendPushs(chat, message);
+    }
+
+    @Async
+    public void sendPushs(CChat chat, CMessage message) {
+        var users = cUserRepository.findAllByUidIn(chat.id_subscriber).orElseThrow();
+        users.forEach( user -> {
+            if (!message.getSenderId().equals(user.uid)) {
+                notificationService.pushMessage(user.token, user.description, "Send new message to chat " + chat.getDescription());
+            }
         });
     }
 
@@ -133,7 +142,19 @@ public class MessageService {
             newEvent = cEventReposirory.save(newEvent);
             log.debug(String.format("WS RS >>> /topic/allEvents/1 prevEvent:%s", newEvent));
             simpMessagingTemplate.convertAndSend("/topic/allEvents/1", newEvent);
+            sendEventPushs(newEvent);
+    }
 
+    @Async
+    public void sendEventPushs(CEvent cEvent) {
+        var owner = cUserRepository.findByUid(cEvent.ownerId).orElseThrow();
+        var destination = 3.5 * Math.random();
+        String body =  String.format("%s add event %fkm", owner.description, destination);
+        cUserRepository.findAll().forEach( user -> {
+            if(!cEvent.getOwnerId().equals(user.uid)) {
+                notificationService.pushMessage(user.token, cEvent.title, body);
+            }
+        });
     }
 
 //    public void sendEventV1(CEvent CEvent) {
@@ -227,7 +248,7 @@ public class MessageService {
         return ((List<CChat>) cChatsRepository.findAll()).stream().filter(ev -> ev.getId_subscriber().contains(cuId) && ev.getId_subscriber().contains(suId) && ev.getType() == 0).findFirst().orElse(this.createNewChat(cuId, suId));
     }
 
-    CChat createNewChat(String curid, String secuid) {
+    public CChat createNewChat(String curid, String secuid) {
         var chatn = new CChat();
         chatn.setType(0);
         var set = new HashSet<String>();

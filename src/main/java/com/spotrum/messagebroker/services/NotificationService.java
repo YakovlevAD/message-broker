@@ -18,38 +18,18 @@ import java.util.concurrent.ExecutionException;
 @Service
 public class NotificationService {
 
-//    public void pushMessage(String alertTitle, String alertBody, String certPath, String certPass, String token) {
-//        System.out.println(">>>>init push");
-//        ApnsService service = APNS.newService()
-//                .withCert(certPath, certPass)
-//                .withSandboxDestination()
-//                .build();
-//
-//        String payload = APNS.newPayload()
-//                .alertBody(alertBody)
-//                .alertTitle(alertTitle).build();
-//
-//        var note = service.push(token, payload);
-//
-//        Map<String, Date> inactiveDevices = service.getInactiveDevices();
-//        for (String deviceToken : inactiveDevices.keySet()) {
-//            Date inactiveAsOf = inactiveDevices.get(deviceToken);
-//            System.out.println(">>>>Inaktive: "+deviceToken+" "+inactiveAsOf);
-//        }
-//        System.out.println(">>>>>Push sended "+note.toString());
-//    }
-
-    public void pushTestMessage(){
+    public void pushMessage(String applicationToken, String title, String body){
         final SimpleApnsPushNotification pushNotification;
 
         final ApnsPayloadBuilder payloadBuilder = new SimpleApnsPayloadBuilder();
         payloadBuilder
+                .setSound("default")
                 .setBadgeNumber(1)
-                .setAlertTitle("title")
-                .setAlertBody("body");
+                .setAlertTitle(title)
+                .setAlertBody(body);
 
         final String payload = payloadBuilder.build();
-        final String token = TokenUtil.sanitizeTokenString("80c347492a99015dfd920c2a379b0418b8b92e7f364f4d43b1455d7e685dc7d1a657140f324e00a74f5cfeedb227b79086340c9167a45e23db77513ba0edc791c5e02435f0cf4967c2a04f5c4464dd78");
+        final String token = TokenUtil.sanitizeTokenString(applicationToken);
 
         pushNotification = new SimpleApnsPushNotification(token, "com.spotrum.Spotrum", payload);
         try {
