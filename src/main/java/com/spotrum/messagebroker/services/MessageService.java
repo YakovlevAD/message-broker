@@ -264,6 +264,12 @@ public class MessageService {
     public CUser getUserById(String id) {
         return cUserRepository.findByUid(id).orElseThrow();
     }
+
+    public CUser postUpdateToken(CUser user) {
+        var ruser = cUserRepository.findByUid(user.uid).orElseThrow();
+        ruser.setToken(user.token);
+        return cUserRepository.save(user);
+    }
 }
 
 // 0 - individual

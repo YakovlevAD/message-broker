@@ -103,6 +103,11 @@ public class RESTController {
         return messageService.postNewUser(user);
     }
 
+    @PostMapping("/postUpdateToken")
+    public CUser postUpdateToken(@RequestBody CUser user) {
+        return messageService.postUpdateToken(user);
+    }
+
     private Double balance = 1000.00;
     @GetMapping("/getBalance")
     public CBalance getBalance(@RequestParam("id")String id) {
