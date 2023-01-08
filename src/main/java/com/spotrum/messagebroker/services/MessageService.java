@@ -265,10 +265,10 @@ public class MessageService {
         return cUserRepository.findByUid(id).orElseThrow();
     }
 
-    public CUser postUpdateToken(CUser user) {
-        var ruser = cUserRepository.findByUid(user.uid).orElseThrow();
-        ruser.setToken(user.token);
-        return cUserRepository.save(user);
+    public CUser getUpdateToken(String uid, String token) {
+        var ruser = cUserRepository.findByUid(uid).orElseThrow();
+        ruser.setToken(ruser.token);
+        return cUserRepository.save(ruser);
     }
 }
 

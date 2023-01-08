@@ -62,6 +62,12 @@ public class RESTController {
         return messageService.getChatByChatId(id);
     }
 
+    @GetMapping("/getUpdateToken")
+    public CUser getUpdateToken(@RequestParam("uid")String uid, @RequestParam("token") String token) {
+        log.debug(String.format("REST RQ <<< /getUpdateToken id=%s, token=%s", uid, token));
+        return messageService.getUpdateToken(uid, token);
+    }
+
     @GetMapping("/getUserById")
     public ResponseEntity getUserById(@RequestParam("id")String id) {
         log.debug(String.format("REST RQ <<< .getUserById id=%s", id));
@@ -101,11 +107,6 @@ public class RESTController {
     public CUser postNewUser(@RequestBody CUser user) {
         System.out.println(">>>>>>>"+user);
         return messageService.postNewUser(user);
-    }
-
-    @PostMapping("/postUpdateToken")
-    public CUser postUpdateToken(@RequestBody CUser user) {
-        return messageService.postUpdateToken(user);
     }
 
     private Double balance = 1000.00;
