@@ -49,6 +49,7 @@ DROP TABLE IF EXISTS c_events;
 
 CREATE TABLE c_events (
                           id INT(11) AUTO_INCREMENT,
+                          color VARCHAR (255) NOT NULL,
                           owner_id VARCHAR (255) NOT NULL,
                           title VARCHAR(255) NOT NULL,
                           description VARCHAR(255) NOT NULL,
@@ -57,7 +58,6 @@ CREATE TABLE c_events (
                           chat_id INT(11) NOT NULL,
                           latitude VARCHAR(255) NOT NULL,
                           longitude VARCHAR(255) NOT NULL,
-
                           PRIMARY KEY (id)
 )AUTO_INCREMENT=0 DEFAULT CHARSET=utf8mb4;
 

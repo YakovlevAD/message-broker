@@ -17,6 +17,9 @@ public class CEvent {
     @Column(name = "owner_id")
     public String ownerId;
 
+    @Column(name = "color")
+    public String color;
+
     @Column(name = "title")
     public String title;
 
