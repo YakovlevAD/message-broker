@@ -57,7 +57,7 @@ public class MessageService {
     @Async
     public void sendPushs(CChat chat, CMessage message) {
         var users = cUserRepository.findAllByUidIn(chat.id_subscriber).orElseThrow();
-        users.forEach( user -> {
+        users.forEach(user -> {
             if (!message.getSenderId().equals(user.uid)) {
                 notificationService.pushMessage(user.token, user.description, "Send new message to chat " + chat.getDescription());
             }
@@ -124,29 +124,29 @@ public class MessageService {
 
     public void sendNewEvent(CEvent cEvent) {
 
-            var newEvent = new CEvent();
-            newEvent.setOwnerId(cEvent.ownerId);
-            newEvent.setTitle(cEvent.title);
-            newEvent.setDescription(cEvent.description);
-            newEvent.setDuration(cEvent.duration);
-            newEvent.setStartTime(cEvent.startTime);
-            newEvent.setColor( cEvent.color.equals("healthy") ? "#00ff00": "#0000ff");
+        var newEvent = new CEvent();
+        newEvent.setOwnerId(cEvent.ownerId);
+        newEvent.setTitle(cEvent.title);
+        newEvent.setDescription(cEvent.description);
+        newEvent.setDuration(cEvent.duration);
+        newEvent.setStartTime(cEvent.startTime);
+        newEvent.setColor(cEvent.color.equals("healthy") ? "#00ff00" : "#0000ff");
 
-            newEvent.setLatitude(cEvent.latitude);
-            newEvent.setLongitude(cEvent.longitude);
+        newEvent.setLatitude(cEvent.latitude);
+        newEvent.setLongitude(cEvent.longitude);
 
-            var newChat = new CChat();
-            newChat.setDescription(cEvent.title);
-            newChat.setType(1);
-            newChat = cChatsRepository.save(newChat);
-            System.out.println("############" + newChat.getId());
-            newEvent.setChatId(newChat.getId());
-            System.out.println("############" + newEvent.getChatId());
-            newEvent = cEventReposirory.save(newEvent);
-            newEvent.setColor(newEvent.getColor()+calcAlpha(newEvent.getStartTime()));
-            log.debug(String.format("WS RS >>> /topic/allEvents/1 prevEvent:%s", newEvent));
-            simpMessagingTemplate.convertAndSend("/topic/allEvents/1", newEvent);
-            sendEventPushs(newEvent);
+        var newChat = new CChat();
+        newChat.setDescription(cEvent.title);
+        newChat.setType(1);
+        newChat = cChatsRepository.save(newChat);
+        System.out.println("############" + newChat.getId());
+        newEvent.setChatId(newChat.getId());
+        System.out.println("############" + newEvent.getChatId());
+        newEvent = cEventReposirory.save(newEvent);
+        newEvent.setColor(newEvent.getColor() + calcAlpha(newEvent.getStartTime()));
+        log.debug(String.format("WS RS >>> /topic/allEvents/1 prevEvent:%s", newEvent));
+        simpMessagingTemplate.convertAndSend("/topic/allEvents/1", newEvent);
+        sendEventPushs(newEvent);
     }
 
     @Async
@@ -154,9 +154,9 @@ public class MessageService {
         var owner = cUserRepository.findByUid(cEvent.ownerId).orElseThrow();
         var destination = 3.5 * Math.random();
         String title = String.format("%s add event", owner.description);
-        String body =  String.format("%s from %fkm", cEvent.title, destination);
-        cUserRepository.findAll().forEach( user -> {
-            if(!cEvent.getOwnerId().equals(user.uid)) {
+        String body = String.format("%s from %fkm", cEvent.title, destination);
+        cUserRepository.findAll().forEach(user -> {
+            if (!cEvent.getOwnerId().equals(user.uid)) {
                 notificationService.pushMessage(user.token, title, body);
             }
         });
@@ -166,21 +166,21 @@ public class MessageService {
         // 24 часа в hex
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z");
         ZonedDateTime zonedDateTime = ZonedDateTime.parse(startTime, formatter);
-        System.out.println("src "+zonedDateTime);
-        System.out.println("+24 "+zonedDateTime.plusHours(24));
-        System.out.println("+24 isAfter "+zonedDateTime.isAfter(ZonedDateTime.now().plusHours(24)));
-        var startTimeInMills = zonedDateTime.isAfter(ZonedDateTime.now().plusHours(24)) ? ZonedDateTime.now().plusHours(24).toInstant().toEpochMilli(): zonedDateTime.toInstant().toEpochMilli();
-        System.out.println("now: "+ZonedDateTime.now().toInstant().toEpochMilli());
-        System.out.println("startTimeInMills: "+startTimeInMills);
-        var interval =  (startTimeInMills - ZonedDateTime.now().toInstant().toEpochMilli());
+        System.out.println("src " + zonedDateTime);
+        System.out.println("+24 " + zonedDateTime.plusHours(24));
+        System.out.println("+24 isAfter " + zonedDateTime.isAfter(ZonedDateTime.now().plusHours(24)));
+        var startTimeInMills = zonedDateTime.isAfter(ZonedDateTime.now().plusHours(24)) ? ZonedDateTime.now().plusHours(24).toInstant().toEpochMilli() : zonedDateTime.toInstant().toEpochMilli();
+        System.out.println("now: " + ZonedDateTime.now().toInstant().toEpochMilli());
+        System.out.println("startTimeInMills: " + startTimeInMills);
+        var interval = (startTimeInMills - ZonedDateTime.now().toInstant().toEpochMilli());
         System.out.println("interval: " + interval);
         var oldRange = 86400000;
         var newRange = 32;
         var newValue = (interval * newRange) / oldRange;
 //        Integer intInf = Math.toIntExact(newValue / 1000);
         System.out.println("newValue " + newValue);
-        var hex  = Integer.toHexString((int)newValue);
-        return hex;
+        var hex = Integer.toHexString((int) newValue);
+        return hex.length() < 2 ? "0" + hex : hex;
     }
 
 //    public void sendEventV1(CEvent CEvent) {
@@ -212,9 +212,9 @@ public class MessageService {
 
     public List<CEvent> getAllEvents() {
         List<CEvent> list = (List<CEvent>) cEventReposirory.findAll();
-        var listWithAlpha = list.stream().map(el->{
-            el.setColor(el.getColor()+calcAlpha(el.getStartTime()));
-            log.debug(String.format("########:%s",checkEvents(el)));
+        var listWithAlpha = list.stream().map(el -> {
+            el.setColor(el.getColor() + calcAlpha(el.getStartTime()));
+            log.debug(String.format("########:%s", checkEvents(el)));
             return el;
         }).collect(Collectors.toList());
         return listWithAlpha.stream().filter(this::checkEvents).collect(Collectors.toList());
