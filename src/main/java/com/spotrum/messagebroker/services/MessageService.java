@@ -212,11 +212,12 @@ public class MessageService {
 
     public List<CEvent> getAllEvents() {
         List<CEvent> list = (List<CEvent>) cEventReposirory.findAll();
-        list.stream().forEach(el->{
+        var listWithAlpha = list.stream().map(el->{
             el.setColor(el.getColor()+calcAlpha(el.getStartTime()));
             log.debug(String.format("########:%s",checkEvents(el)));
-        });
-        return list.stream().filter(this::checkEvents).collect(Collectors.toList());
+            return el;
+        }).collect(Collectors.toList());
+        return listWithAlpha.stream().filter(this::checkEvents).collect(Collectors.toList());
     }
 
     public boolean checkEvents(CEvent ev) {
