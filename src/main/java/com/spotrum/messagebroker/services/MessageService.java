@@ -183,7 +183,7 @@ public class MessageService {
         Double newRange = 255.0;
         Double div = interval * newRange;
         System.out.println(div);
-        Double newValue = div / oldRange;
+        Double newValue = div / oldRange - 255.0;
 //        Integer intInf = Math.toIntExact(newValue / 1000);
         System.out.println("newValue " + newValue);
         String hex = Integer.toHexString(newValue.intValue());
