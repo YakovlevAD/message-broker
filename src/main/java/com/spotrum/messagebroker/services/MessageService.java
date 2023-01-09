@@ -175,7 +175,7 @@ public class MessageService {
         var interval =  (startTimeInMills - ZonedDateTime.now().toInstant().toEpochMilli());
         System.out.println("interval: " + interval);
         var oldRange = 86400000;
-        var newRange = 16;
+        var newRange = 32;
         var newValue = (interval * newRange) / oldRange;
 //        Integer intInf = Math.toIntExact(newValue / 1000);
         System.out.println("newValue " + newValue);
