@@ -130,7 +130,7 @@ public class MessageService {
             newEvent.setDescription(cEvent.description);
             newEvent.setDuration(cEvent.duration);
             newEvent.setStartTime(cEvent.startTime);
-            newEvent.setColor( cEvent.color.equals("healthy") ? "#00ff00"+calcAlpha(cEvent.getStartTime()) : "#0000ff"+calcAlpha(cEvent.getStartTime()) );
+            newEvent.setColor( cEvent.color.equals("healthy") ? "#00ff00": "#0000ff");
 
             newEvent.setLatitude(cEvent.latitude);
             newEvent.setLongitude(cEvent.longitude);
@@ -143,6 +143,7 @@ public class MessageService {
             newEvent.setChatId(newChat.getId());
             System.out.println("############" + newEvent.getChatId());
             newEvent = cEventReposirory.save(newEvent);
+            newEvent.setColor(newEvent.getColor()+calcAlpha(newEvent.getStartTime()));
             log.debug(String.format("WS RS >>> /topic/allEvents/1 prevEvent:%s", newEvent));
             simpMessagingTemplate.convertAndSend("/topic/allEvents/1", newEvent);
             sendEventPushs(newEvent);
@@ -178,7 +179,7 @@ public class MessageService {
         var newValue = (interval * newRange) / oldRange;
 //        Integer intInf = Math.toIntExact(newValue / 1000);
         System.out.println("newValue " + newValue);
-        var hex  = Integer.toHexString((int) (16 - newValue));
+        var hex  = Integer.toHexString((int)newValue);
         return hex;
     }
 
@@ -212,6 +213,7 @@ public class MessageService {
     public List<CEvent> getAllEvents() {
         List<CEvent> list = (List<CEvent>) cEventReposirory.findAll();
         list.stream().forEach(el->{
+            el.setColor(el.getColor()+calcAlpha(el.getStartTime()));
             log.debug(String.format("########:%s",checkEvents(el)));
         });
         return list.stream().filter(this::checkEvents).collect(Collectors.toList());
