@@ -178,7 +178,7 @@ public class MessageService {
         var newValue = (interval * newRange) / oldRange;
 //        Integer intInf = Math.toIntExact(newValue / 1000);
         System.out.println("newValue " + newValue);
-        var hex  = Integer.toHexString((int) newValue);
+        var hex  = Integer.toHexString((int) (16 - newValue));
         return hex;
     }
 
