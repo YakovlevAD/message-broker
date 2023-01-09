@@ -128,7 +128,7 @@ public class MessageService {
             newEvent.setDescription(cEvent.description);
             newEvent.setDuration(cEvent.duration);
             newEvent.setStartTime(cEvent.startTime);
-            newEvent.setColor(cEvent.color);
+            newEvent.setColor( cEvent.color.equals("healthy") ? "#00ff0000" : "0000ff00" );
 
             newEvent.setLatitude(cEvent.latitude);
             newEvent.setLongitude(cEvent.longitude);
