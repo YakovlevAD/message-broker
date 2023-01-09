@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -169,17 +171,22 @@ public class MessageService {
         System.out.println("src " + zonedDateTime);
         System.out.println("+24 " + zonedDateTime.plusHours(24));
         System.out.println("+24 isAfter " + zonedDateTime.isAfter(ZonedDateTime.now().plusHours(24)));
-        var startTimeInMills = zonedDateTime.isAfter(ZonedDateTime.now().plusHours(24)) ? ZonedDateTime.now().plusHours(24).toInstant().toEpochMilli() : zonedDateTime.toInstant().toEpochMilli();
-        System.out.println("now: " + ZonedDateTime.now().toInstant().toEpochMilli());
-        System.out.println("startTimeInMills: " + startTimeInMills);
-        var interval = (startTimeInMills - ZonedDateTime.now().toInstant().toEpochMilli());
+        var nowp24 = ZonedDateTime.now().plusHours(24);
+        System.out.println(nowp24);
+        var startTimeInsec = zonedDateTime.isAfter(nowp24) ? nowp24.toEpochSecond() : zonedDateTime.toEpochSecond();
+        System.out.println("now: " + ZonedDateTime.now().toEpochSecond());
+        System.out.println("startTimeInMills: " + startTimeInsec);
+        var interval = (startTimeInsec - ZonedDateTime.now().toEpochSecond());
+        interval = interval < 0 ? 1 : interval;
         System.out.println("interval: " + interval);
-        var oldRange = 86400000;
-        var newRange = 32;
-        var newValue = (interval * newRange) / oldRange;
+        Double oldRange = 86400.0;
+        Double newRange = 255.0;
+        Double div = interval * newRange;
+        System.out.println(div);
+        Double newValue = div / oldRange;
 //        Integer intInf = Math.toIntExact(newValue / 1000);
         System.out.println("newValue " + newValue);
-        var hex = Integer.toHexString((int) newValue);
+        String hex = Integer.toHexString(newValue.intValue());
         return hex.length() < 2 ? "0" + hex : hex;
     }
 
