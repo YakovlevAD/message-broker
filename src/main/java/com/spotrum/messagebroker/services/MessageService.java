@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -128,7 +130,7 @@ public class MessageService {
             newEvent.setDescription(cEvent.description);
             newEvent.setDuration(cEvent.duration);
             newEvent.setStartTime(cEvent.startTime);
-            newEvent.setColor( cEvent.color.equals("healthy") ? "#00ff0000" : "#0000ff00" );
+            newEvent.setColor( cEvent.color.equals("healthy") ? "#00ff00"+calcAlpha(cEvent.getStartTime()) : "#0000ff"+calcAlpha(cEvent.getStartTime()) );
 
             newEvent.setLatitude(cEvent.latitude);
             newEvent.setLongitude(cEvent.longitude);
@@ -157,6 +159,27 @@ public class MessageService {
                 notificationService.pushMessage(user.token, title, body);
             }
         });
+    }
+
+    public static String calcAlpha(String startTime) {
+        // 24 часа в hex
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss Z");
+        ZonedDateTime zonedDateTime = ZonedDateTime.parse(startTime, formatter);
+        System.out.println("src "+zonedDateTime);
+        System.out.println("+24 "+zonedDateTime.plusHours(24));
+        System.out.println("+24 isAfter "+zonedDateTime.isAfter(ZonedDateTime.now().plusHours(24)));
+        var startTimeInMills = zonedDateTime.isAfter(ZonedDateTime.now().plusHours(24)) ? ZonedDateTime.now().plusHours(24).toInstant().toEpochMilli(): zonedDateTime.toInstant().toEpochMilli();
+        System.out.println("now: "+ZonedDateTime.now().toInstant().toEpochMilli());
+        System.out.println("startTimeInMills: "+startTimeInMills);
+        var interval =  (startTimeInMills - ZonedDateTime.now().toInstant().toEpochMilli());
+        System.out.println("interval: " + interval);
+        var oldRange = 86400000;
+        var newRange = 16;
+        var newValue = (interval * newRange) / oldRange;
+//        Integer intInf = Math.toIntExact(newValue / 1000);
+        System.out.println("newValue " + newValue);
+        var hex  = Integer.toHexString((int) newValue);
+        return hex;
     }
 
 //    public void sendEventV1(CEvent CEvent) {
