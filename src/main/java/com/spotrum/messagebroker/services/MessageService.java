@@ -56,7 +56,6 @@ public class MessageService {
         sendPushs(chat, message);
     }
 
-    @Async
     public void sendPushs(CChat chat, CMessage message) {
         var users = cUserRepository.findAllByUidIn(chat.id_subscriber).orElseThrow();
         users.forEach(user -> {
@@ -151,7 +150,6 @@ public class MessageService {
         sendEventPushs(newEvent);
     }
 
-    @Async
     public void sendEventPushs(CEvent cEvent) {
         var owner = cUserRepository.findByUid(cEvent.ownerId).orElseThrow();
         var destination = 3.5 * Math.random();
