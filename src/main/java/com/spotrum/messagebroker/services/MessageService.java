@@ -57,10 +57,11 @@ public class MessageService {
     }
 
     public void sendPushs(CChat chat, CMessage message) {
+        var sender = cUserRepository.findByUid(message.senderId).orElseThrow();
         var users = cUserRepository.findAllByUidIn(chat.id_subscriber).orElseThrow();
         users.forEach(user -> {
             if (!message.getSenderId().equals(user.uid)) {
-                notificationService.pushMessage(user.token, user.description, "Send new message to chat " + chat.getDescription());
+                notificationService.pushMessage(user.token, sender.description, "Send new message to chat " + chat.getDescription());
             }
         });
     }
