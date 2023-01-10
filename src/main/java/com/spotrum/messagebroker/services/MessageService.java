@@ -7,6 +7,7 @@ import com.spotrum.messagebroker.repositories.CMessageRepository;
 import com.spotrum.messagebroker.repositories.CUserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -304,6 +305,10 @@ public class MessageService {
         var rUser = cUserRepository.findByUid(uid).orElseThrow();
         rUser.setToken(token);
         return cUserRepository.save(rUser);
+    }
+
+    public List<CUser> getAllUsers() {
+        return (List<CUser>) cUserRepository.findAll();
     }
 }
 

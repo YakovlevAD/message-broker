@@ -78,6 +78,11 @@ public class RESTController {
         }
     }
 
+    @GetMapping("/getAllUsers")
+    public List<CUser> getAllUsers() {
+        return messageService.getAllUsers();
+    }
+
     @GetMapping("/getIndividualChatBetween")
     public CChat getIndividualChatBetwen(@RequestParam("cuId")String cuId, @RequestParam("suId")String suId) {
         log.debug(String.format("REST  RQ <<< /getIndividualChatBetween cuId=%s suId=%s",  cuId, suId));
