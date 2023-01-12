@@ -308,7 +308,7 @@ public class MessageService {
     }
 
     public List<CUser> getAllUsers() {
-        return ((List<CUser>) cUserRepository.findAll()).stream().filter(us -> us.status != 0).collect(Collectors.toList());
+        return ((List<CUser>) cUserRepository.findAll()).stream().filter(us -> us.status > 0).collect(Collectors.toList());
     }
 }
 
