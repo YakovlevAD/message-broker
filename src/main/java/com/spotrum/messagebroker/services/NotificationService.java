@@ -35,7 +35,7 @@ public class NotificationService {
         try {
             final ApnsClient apnsClient = new ApnsClientBuilder()
                     .setApnsServer(ApnsClientBuilder.DEVELOPMENT_APNS_HOST)
-                    .setClientCredentials(new File("spotrumCert.p12"), "CBRY875bv45zb2012!")
+                    .setClientCredentials(new File("pushCer.p12"), "CBRY875bv45zb2012!")
                     .build();
 
             final PushNotificationFuture<SimpleApnsPushNotification, PushNotificationResponse<SimpleApnsPushNotification>>
