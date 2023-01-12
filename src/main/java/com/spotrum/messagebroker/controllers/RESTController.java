@@ -24,11 +24,7 @@ public class RESTController {
 
     //TODO: - вставить id app
     @GetMapping("/")
-    public String getMainPage(@RequestParam(value = "val",required = false)String val){
-        notificationService
-                .pushMessage(val,
-                        "Hello!",
-                        "test sound");
+    public String getMainPage() {
         return "<a href=\"https://itunes.apple.com/ru/app/id6444730876\">Download Spotrum app</a>";
     }
 
