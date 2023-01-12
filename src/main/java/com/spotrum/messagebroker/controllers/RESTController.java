@@ -25,7 +25,7 @@ public class RESTController {
     //TODO: - вставить id app
     @GetMapping("/")
     public String getMainPage() {
-        return "<a href=\"https://itunes.apple.com/ru/app/id6444730876\">Download Spotrum app</a>";
+        return "<a href=\"https://itunes.apple.com/ru/app/id1663662230\">Download Spotrum app</a>";
     }
 
     @GetMapping("/getAllEvents")
